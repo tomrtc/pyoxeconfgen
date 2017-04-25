@@ -1,0 +1,11 @@
+PyYAML==3.12
+click==6.7
+clickclick==1.2.1
+pbr==3.0.0
+py==1.4.33
+## !! Could not determine repository location
+pyoxeconfgen==0.0.0
+pytest==3.0.7
+pyvmomi==6.5
+requests==2.13.0
+six==1.10.0
