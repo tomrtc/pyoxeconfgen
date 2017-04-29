@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 
-import click
+from pyoxeconfgen.pyoxeconfgen import cli
 
-@click.command()
+
 def main():
-    click.secho("Pyoxeconfgen main command line invoked.", fg='green')
+    cli()
 
 
 if __name__ == '__main__':
