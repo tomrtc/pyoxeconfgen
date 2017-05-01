@@ -83,6 +83,8 @@ def create_users(**kwargs):
         createUser(ip_addr, extensionNumber, 'SIP', extensionNumber, set_tp, header_post)
 
 
+#deleteUsers
+
 @cli.command('setRainbowConnection')
 @click.option('--rainbowDomain', help='Rainbow Domain')
 @click.option('--rainbowId', help='PBX Rainbow ID')
