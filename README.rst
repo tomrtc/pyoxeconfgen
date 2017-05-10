@@ -29,6 +29,7 @@ Examples
 ========
 
 pyoxeconfgen_cli createUsers --oxeIp="10.100.8.10" --oxePassword='Pcloud123!' --rangeSize=100 --rangeStart=8000 --setType "SIP_Extension"
+pyoxeconfgen_cli createUsers --oxeIp="10.100.8.10" --oxePassword='Pcloud123!' --rangeSize=100 --rangeStart=8000 --setType "UA_VIRTUAL"
 
 Development
 ===========

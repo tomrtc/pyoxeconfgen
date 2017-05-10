@@ -11,8 +11,8 @@ import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 import progressbar
 import pprint
+import json
 
-# CLI handlfrom confgen.otecConfig import *ing
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 
 STYLES = {
@@ -42,6 +42,7 @@ def print_version(ctx, param, value):
     click.echo('confgen version: {}'.format(__version__))
     ctx.exit()
 
+
 # CLI
 @click.group(cls=AliasedGroup, context_settings=CONTEXT_SETTINGS)
 @click.option('-V', '--version', is_flag=True, callback=print_version, expose_value=False, is_eager=True,
@@ -57,7 +58,7 @@ def cli():
 @click.option('--rangeSize', help='range of users to create', default=100)
 @click.option('--rangeStart', help='first internal number')
 @click.option('--setType', help='set type')
-def create_users(**kwargs):
+def cli_create_users(**kwargs):
     ip_addr = kwargs.get('oxeip', None)
     for i, j in kwargs.items():
         print('DEBUG_1: {} : {}', i, j)
@@ -74,16 +75,19 @@ def create_users(**kwargs):
         exit()
     set_tp = kwargs.get('settype', 'SIP_Extension')
     requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
-    token = authenticate(ip_addr, oxe_lgn, oxe_pwd)
-    header_post = {'Authorization': 'Bearer ' + token,
-                  'accept': 'application/json',
-                  'Content-Type': 'application/json'}
+    token = oxe_authenticate(ip_addr, oxe_lgn, oxe_pwd)
+    header_post = {
+        'Authorization': 'Bearer ' + token,
+        'accept': 'application/json',
+        'Content-Type': 'application/json'
+    }
     bar = progressbar.ProgressBar()
     for extensionNumber in bar(range(rng_st, rng_st + rng_sz)):
-        createUser(ip_addr, extensionNumber, 'SIP', extensionNumber, set_tp, header_post)
+        oxe_create_user(ip_addr, extensionNumber, 'SIP', extensionNumber, set_tp, header_post)
 
 
-#deleteUsers
+# deleteUsers
+
 
 @cli.command('setRainbowConnection')
 @click.option('--rainbowDomain', help='Rainbow Domain')
@@ -104,7 +108,6 @@ def set_rainbow_connection(**kwargs):
     if act_cd is None:
         print('--activationCode option is mandatory. Exiting ...')
         exit()
-
 
 # Create entity
 # Set Flex Server
