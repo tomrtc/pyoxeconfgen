@@ -13,6 +13,7 @@ import progressbar
 import pprint
 import json
 
+
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 
 STYLES = {
@@ -60,9 +61,6 @@ def cli():
 @click.option('--setType', help='set type')
 def cli_create_users(**kwargs):
     ip_address = kwargs.get('oxeip', None)
-    # for i, j in kwargs.items():
-    #     print('DEBUG_1: {} : {}', iact_cd, j)
-    # print('DEBUG_2: {} ', ip_address)
     if ip_address is None:
         print('--oxeIp option is mandatory. Exiting ...')
         exit()
@@ -87,6 +85,33 @@ def cli_create_users(**kwargs):
 
 
 # deleteUsers
+
+
+@cli.command('setFlexServer')
+@click.option('--oxeIp', help='OXE CS IP@')
+@click.option('--oxeLogin', help='OXE login', default='mtcl')
+@click.option('--oxePassword', help='OXE password', default='mtcl')
+@click.option('--flexIp', help='OXE CS IP@')
+def cli_set_flex_server(**kwargs):
+    ip_address = kwargs.get('oxeip', None)
+    if ip_address is None:
+        print('--oxeIp option is mandatory. Exiting ...')
+        exit()
+    flex_ip_address = kwargs.get('flexip', None)
+    if flex_ip_address is None:
+        print('--flexIp option is mandatory. Exiting ...')
+        exit()
+    oxe_login = kwargs.get('oxelogin')
+    oxe_password = kwargs.get('oxepassword')
+    requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+    token = oxe_authenticate(ip_address, oxe_login, oxe_password)
+    header_put = {
+        'Authorization': 'Bearer ' + token,
+        'accept': 'application/json',
+        'Content-Type': 'application/json'
+    }
+    oxe_set_flex(ip_address, flex_ip_address, 27000, header_put)
+    print('WARNING: OXE must be rebooted')
 
 
 @cli.command('setRainbowConnection')

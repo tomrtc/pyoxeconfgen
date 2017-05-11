@@ -1,5 +1,6 @@
 import requests
 import sys
+import pprint
 
 
 def oxe_authenticate(ip_address, login, password):
@@ -11,8 +12,19 @@ def oxe_authenticate(ip_address, login, password):
     return get_auth.json()['token']
 
 
-def oxe_get_json_model(ip_address):
-    return requests.get('https://' + ip_address + '/api/mgt/1.0/Node/1/model')
+def oxe_get_json_model(ip_address, header_get):
+    return requests.get('https://' + ip_address + '/api/mgt/1.0/Node/1/model', headers=header_get, verify=False)
+
+
+def oxe_set_flex(ip_address, flex_ip_address, flex_port, header_put):
+    payload = {
+        "Flex_Licensing_Enable": "Yes",
+        "Flex_Server_Address": flex_ip_address,
+        "Flex_Server_Port": flex_port,
+        "Flex_ProductId_Discovery": "Yes"
+    }
+    return requests.put('https://' + ip_address + '/api/mgt/1.0/Node/1/System_Parameters/1/Flex_Server/1',
+                        headers=header_put, json=payload, verify=False)
 
 
 def oxe_create_user(ip_address, extension, name, first_name, station_type, header_post):
