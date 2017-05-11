@@ -59,31 +59,31 @@ def cli():
 @click.option('--rangeStart', help='first internal number')
 @click.option('--setType', help='set type')
 def cli_create_users(**kwargs):
-    ip_addr = kwargs.get('oxeip', None)
-    for i, j in kwargs.items():
-        print('DEBUG_1: {} : {}', i, j)
-    print('DEBUG_2: {} ', ip_addr)
-    if ip_addr is None:
+    ip_address = kwargs.get('oxeip', None)
+    # for i, j in kwargs.items():
+    #     print('DEBUG_1: {} : {}', iact_cd, j)
+    # print('DEBUG_2: {} ', ip_address)
+    if ip_address is None:
         print('--oxeIp option is mandatory. Exiting ...')
         exit()
-    oxe_lgn = kwargs.get('oxelogin')
-    oxe_pwd = kwargs.get('oxepassword')
-    rng_sz = int(kwargs.get('rangesize'))
-    rng_st = int(kwargs.get('rangestart', 0))
-    if rng_st is None:
+    oxe_login = kwargs.get('oxelogin')
+    oxe_password = kwargs.get('oxepassword')
+    range_size = int(kwargs.get('rangesize'))
+    range_start = int(kwargs.get('rangestart', 0))
+    if range_start is None:
         print('--rangeStart option is mandatory. Exiting ...')
         exit()
-    set_tp = kwargs.get('settype', 'SIP_Extension')
+    set_type = kwargs.get('settype', 'SIP_Extension')
     requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
-    token = oxe_authenticate(ip_addr, oxe_lgn, oxe_pwd)
+    token = oxe_authenticate(ip_address, oxe_login, oxe_password)
     header_post = {
         'Authorization': 'Bearer ' + token,
         'accept': 'application/json',
         'Content-Type': 'application/json'
     }
     bar = progressbar.ProgressBar()
-    for extensionNumber in bar(range(rng_st, rng_st + rng_sz)):
-        oxe_create_user(ip_addr, extensionNumber, 'SIP', extensionNumber, set_tp, header_post)
+    for extensionNumber in bar(range(range_start, range_start + range_size)):
+        oxe_create_user(ip_address, extensionNumber, 'SIP', extensionNumber, set_type, header_post)
 
 
 # deleteUsers
@@ -95,17 +95,17 @@ def cli_create_users(**kwargs):
 @click.option('--phoneBook', help='', default='YES')
 @click.option('--activationCode', help='PBX activation code')
 def set_rainbow_connection(**kwargs):
-    rbw_dmn = kwargs.get('rainbowDomain', None)
-    if rbw_dmn is None:
+    rainbow_domain = kwargs.get('rainbowDomain', None)
+    if rainbow_domain is None:
         print('--rainbowDomain option is mandatory. Exiting ...')
         exit()
-    rbw_id = kwargs.get('rainbowId', None)
-    if rbw_id is None:
+    rainbow_id = kwargs.get('rainbowId', None)
+    if rainbow_id is None:
         print('--rainbowId option is mandatory. Exiting ...')
         exit()
-    phn_bk = kwargs.get('phoneBook', YES)
-    act_cd = kwargs.get('activationCode', None)
-    if act_cd is None:
+    phone_book = kwargs.get('phoneBook', YES)
+    activation_code = kwargs.get('activationCode', None)
+    if activation_code is None:
         print('--activationCode option is mandatory. Exiting ...')
         exit()
 
