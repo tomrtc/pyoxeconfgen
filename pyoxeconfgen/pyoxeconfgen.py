@@ -12,6 +12,8 @@ from requests.packages.urllib3.exceptions import InsecureRequestWarning
 import progressbar
 import pprint
 import json
+import datetime
+import os
 
 
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
@@ -50,6 +52,30 @@ def print_version(ctx, param, value):
               help='Print the current version number and exit.')
 def cli():
     pass
+
+
+@cli.command('getJsonModel')
+@click.option('--oxeIp', help='OXE CS IP@')
+@click.option('--oxeLogin', help='OXE login', default='mtcl')
+@click.option('--oxePassword', help='OXE password', default='mtcl')
+def cli_get_json_model(**kwargs):
+    ip_address = kwargs.get('oxeip', None)
+    if ip_address is None:
+        print('--oxeIp option is mandatory. Exiting ...')
+        exit()
+    oxe_login = kwargs.get('oxelogin')
+    oxe_password = kwargs.get('oxepassword')
+    requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+    token = oxe_authenticate(ip_address, oxe_login, oxe_password)
+    header_get = {
+        'Authorization': 'Bearer ' + token,
+        'accept': 'application/json',
+        'Content-Type': 'application/json'
+    }
+    json_model = json.loads(oxe_get_json_model(ip_address, header_get))
+    horodating = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
+    with open('/tmp/OXE_' + ip_address + '_' + horodating, 'w') as fh:
+        fh.write(json.dumps(json_model, indent=4, sort_keys=True))
 
 
 @cli.command('createUsers')

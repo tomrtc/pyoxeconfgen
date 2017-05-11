@@ -2,7 +2,7 @@
 Pyoxeconfgen
 ===========
 
-Automation tool managing ALE OmniPCX Enterprise configuration. This tools is using OXE REST API (only available from version M1.403)
+Automation tool managing ALE OmniPCX Enterprise configuration. This tools is using OXE REST API (only available for OXE version >= M1.403.10)
 
 Installation
 ============
@@ -28,8 +28,22 @@ Once installed you can run ::
 Examples
 ========
 
+USERS CREATIONS
+
 pyoxeconfgen_cli createUsers --oxeIp="10.100.8.10" --oxePassword='Pcloud123!' --rangeSize=100 --rangeStart=8000 --setType "SIP_Extension"
 pyoxeconfgen_cli createUsers --oxeIp="10.100.8.10" --oxePassword='Pcloud123!' --rangeSize=100 --rangeStart=8000 --setType "UA_VIRTUAL"
+
+
+SET EXTERNAL FLEX
+
+pyoxeconfgen_cli setFlexServer --oxeIp 10.100.8.11 --flexIp 10.100.8.20
+
+
+GET JSON MODEL
+
+pyoxeconfgen_cli getJsonModel --oxeIp 10.100.8.11
+
+it will write json data model to /tmp/OXE_<IP ADDRESS>_YYYYMMDDHHMMSS
 
 Development
 ===========
