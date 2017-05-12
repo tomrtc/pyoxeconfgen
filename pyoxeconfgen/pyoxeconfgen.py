@@ -105,12 +105,38 @@ def cli_create_users(**kwargs):
         'Content-Type': 'application/json'
     }
     bar = progressbar.ProgressBar()
-    # json_model['definitions']['Station_Type']['values']
+    # json_model['definitions']['Station_Type']['values'] # to control set type with OXE dictionary
     for extensionNumber in bar(range(range_start, range_start + range_size)):
+        # code status 201: OK
+        # code status 503: retry with same requests
         oxe_create_user(ip_address, extensionNumber, 'SIP', extensionNumber, set_type, header_post)
 
 
-# deleteUsers
+@cli.command('deleteUsers')
+@click.option('--oxeIp', help='OXE CS IP@')
+@click.option('--oxeLogin', help='OXE login', default='mtcl')
+@click.option('--oxePassword', help='OXE password', default='mtcl')
+@click.option('--rangeSize', help='range of users to create', default=100)
+@click.option('--rangeStart', help='first internal number')
+def cli_delete_users(**kwargs):
+    ip_address = kwargs.get('oxeip', None)
+    if ip_address is None:
+        print('--oxeIp option is mandatory. Exiting ...')
+        exit()
+    oxe_login = kwargs.get('oxelogin')
+    oxe_password = kwargs.get('oxepassword')
+    range_size = int(kwargs.get('rangesize'))
+    range_start = int(kwargs.get('rangestart', 0))
+    requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+    token = oxe_authenticate(ip_address, oxe_login, oxe_password)
+    header_delete = {
+        'Authorization': 'Bearer ' + token,
+        'accept': 'application/json',
+        'Content-Type': 'text/plain'
+    }
+    bar = progressbar.ProgressBar()
+    for extensionNumber in bar(range(range_start, range_start + range_size)):
+        oxe_delete_user(ip_address, extensionNumber, header_delete)
 
 
 @cli.command('setFlexServer')

@@ -40,3 +40,8 @@ def oxe_create_user(ip_address, extension, name, first_name, station_type, heade
     }
     return requests.post('https://' + ip_address + '/api/mgt/1.0/Node/1/Subscriber/' + str(extension),
                          headers=header_post, json=data_post_create_user, verify=False)
+
+
+def oxe_delete_user(ip_address, extension, header_delete):
+    return requests.delete('https://' + ip_address + '/api/mgt/1.0/Node/1/Subscriber/' + str(extension),
+                           headers=header_delete, verify=False)
