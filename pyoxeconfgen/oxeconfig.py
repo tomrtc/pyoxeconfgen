@@ -1,7 +1,5 @@
 import requests
 import sys
-import json
-import pprint
 
 
 def oxe_authenticate(ip_address, login, password):
@@ -14,7 +12,8 @@ def oxe_authenticate(ip_address, login, password):
 
 
 def oxe_get_json_model(ip_address, header_get):
-    response = requests.get('https://' + ip_address + '/api/mgt/1.0/model', headers=header_get, verify=False, stream=True)
+    response = requests.get('https://' + ip_address + '/api/mgt/1.0/model', headers=header_get, verify=False,
+                            stream=True)
     result = ''
     for chunk in response.iter_content(chunk_size=1024):
         if chunk:

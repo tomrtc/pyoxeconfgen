@@ -13,7 +13,6 @@ import progressbar
 import pprint
 import json
 import datetime
-import os
 
 
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
@@ -74,7 +73,7 @@ def cli_get_json_model(**kwargs):
     }
     json_model = json.loads(oxe_get_json_model(ip_address, header_get))
     horodating = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
-    with open('/tmp/OXE_' + ip_address + '_' + horodating, 'w') as fh:
+    with open('/tmp/OXE_' + ip_address + '_' + horodating + '.json', 'w') as fh:
         fh.write(json.dumps(json_model, indent=4, sort_keys=True))
 
 
@@ -106,6 +105,7 @@ def cli_create_users(**kwargs):
         'Content-Type': 'application/json'
     }
     bar = progressbar.ProgressBar()
+    # json_model['definitions']['Station_Type']['values']
     for extensionNumber in bar(range(range_start, range_start + range_size)):
         oxe_create_user(ip_address, extensionNumber, 'SIP', extensionNumber, set_type, header_post)
 
@@ -161,7 +161,6 @@ def set_rainbow_connection(**kwargs):
         exit()
 
 # Create entity
-# Set Flex Server
 # Create Shelves/OMS
 # Set SIP GW/Pxy/Reg
 # Create SIP Ext GW
