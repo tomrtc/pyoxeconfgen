@@ -36,17 +36,16 @@ def oxe_set_flex(ip_address, flex_ip_address, flex_port, header_put):
     return response
 
 
-def oxe_create_user(ip_address, extension, name, first_name, station_type, header_post):
+def oxe_create_user(ip_address, extension, name, first_name, station_type, header_post, max_retries):
     data_post_create_user = {
         "Annu_Name": name,
         "Annu_First_Name": first_name,
         "Station_Type": station_type
     }
-    max_retries = 10
     for i in range(max_retries):
         response = requests.post('https://' + ip_address + '/api/mgt/1.0/Node/1/Subscriber/' + str(extension),
                              headers=header_post, json=data_post_create_user, verify=False)
-        # code status 201: OK
+        # code status 201: CREATED
         if response.status_code == 201:
             break
         # code status 503: retry with same requests + wait 500ms (oxe max 2r/s)
@@ -55,13 +54,12 @@ def oxe_create_user(ip_address, extension, name, first_name, station_type, heade
     return response
 
 
-def oxe_delete_user(ip_address, extension, header_delete):
-    max_retries = 10
-    for i in range (max_retries)
+def oxe_delete_user(ip_address, extension, header_delete, max_retries):
+    for i in range (max_retries):
         response = requests.delete('https://' + ip_address + '/api/mgt/1.0/Node/1/Subscriber/' + str(extension),
                                headers=header_delete, verify=False)
-        # code status 201: OK
-        if response.status_code == 201:
+        # code status 200: OK
+        if response.status_code == 200:
             break
         # code status 503: retry with same requests + wait 500ms (oxe max 2r/s)
         else:

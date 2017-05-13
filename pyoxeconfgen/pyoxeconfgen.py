@@ -107,7 +107,7 @@ def cli_create_users(**kwargs):
     # json_model['definitions']['Station_Type']['values'] # to control set type with OXE dictionary
     for extension_number in bar(range(range_start, range_start + range_size)):
         oxe_create_user(ip_address, extension_number, set_type + str(extension_number), extension_number, set_type,
-                        header_post)
+                        header_post, 10)
 
 
 @cli.command('deleteUsers')
@@ -134,7 +134,7 @@ def cli_delete_users(**kwargs):
     }
     bar = progressbar.ProgressBar()
     for extension_number in bar(range(range_start, range_start + range_size)):
-        oxe_delete_user(ip_address, extension_number, header_delete)
+        oxe_delete_user(ip_address, extension_number, header_delete, 10)
 
 
 @cli.command('setFlexServer')
