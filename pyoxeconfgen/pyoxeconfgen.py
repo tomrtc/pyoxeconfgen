@@ -10,7 +10,6 @@ from pyoxeconfgen.oxeconfig import *
 import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 import progressbar
-import pprint
 import json
 import datetime
 
@@ -107,8 +106,6 @@ def cli_create_users(**kwargs):
     bar = progressbar.ProgressBar()
     # json_model['definitions']['Station_Type']['values'] # to control set type with OXE dictionary
     for extension_number in bar(range(range_start, range_start + range_size)):
-        # code status 201: OK
-        # code status 503: retry with same requests
         oxe_create_user(ip_address, extension_number, set_type + str(extension_number), extension_number, set_type,
                         header_post)
 
