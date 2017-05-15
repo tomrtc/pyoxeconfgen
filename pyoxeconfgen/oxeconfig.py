@@ -32,7 +32,7 @@ def oxe_set_flex(ip_address, flex_ip_address, flex_port, header_put):
     }
     response = requests.put('https://' + ip_address + '/api/mgt/1.0/Node/1/System_Parameters/1/Flex_Server/1',
                             headers=header_put, json=payload, verify=False)
-    # manage error
+    # manage error todo
     return response
 
 
@@ -44,7 +44,7 @@ def oxe_create_user(ip_address, extension, name, first_name, station_type, heade
     }
     for i in range(max_retries):
         response = requests.post('https://' + ip_address + '/api/mgt/1.0/Node/1/Subscriber/' + str(extension),
-                             headers=header_post, json=data_post_create_user, verify=False)
+                                 headers=header_post, json=data_post_create_user, verify=False)
         # code status 201: CREATED
         if response.status_code == 201:
             break
@@ -55,9 +55,9 @@ def oxe_create_user(ip_address, extension, name, first_name, station_type, heade
 
 
 def oxe_delete_user(ip_address, extension, header_delete, max_retries):
-    for i in range (max_retries):
+    for i in range(max_retries):
         response = requests.delete('https://' + ip_address + '/api/mgt/1.0/Node/1/Subscriber/' + str(extension),
-                               headers=header_delete, verify=False)
+                                   headers=header_delete, verify=False)
         # code status 200: OK
         if response.status_code == 200:
             break

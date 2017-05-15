@@ -13,7 +13,6 @@ import progressbar
 import json
 import datetime
 
-
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 
 STYLES = {
@@ -169,7 +168,7 @@ def cli_set_flex_server(**kwargs):
 @click.option('--rainbowId', help='PBX Rainbow ID')
 @click.option('--phoneBook', help='', default='YES')
 @click.option('--activationCode', help='PBX activation code')
-def set_rainbow_connection(**kwargs):
+def cli_set_rainbow_connection(**kwargs):
     rainbow_domain = kwargs.get('rainbowDomain', None)
     if rainbow_domain is None:
         print('--rainbowDomain option is mandatory. Exiting ...')
@@ -192,3 +191,5 @@ def set_rainbow_connection(**kwargs):
 # Create Attendant
 # Create Hunt Group
 # Create 4645
+# Add mevo to users
+# Add call by name to users
