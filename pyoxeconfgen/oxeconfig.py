@@ -1,4 +1,4 @@
-import pprint
+# import pprint
 import requests
 import sys
 import time
@@ -32,7 +32,7 @@ def oxe_set_flex(ip_address, flex_ip_address, flex_port, header_put):
     }
     response = requests.put('https://' + ip_address + '/api/mgt/1.0/Node/1/System_Parameters/1/Flex_Server/1',
                             headers=header_put, json=payload, verify=False)
-    # manage error todo
+    # todo: manage errors
     return response
 
 
@@ -51,7 +51,7 @@ def oxe_create_user(ip_address, extension, name, first_name, station_type, heade
         # code status 503: retry with same requests + wait 500ms (oxe max 2r/s)
         else:
             time.sleep(.500)
-    return response
+        return response
 
 
 def oxe_delete_user(ip_address, extension, header_delete, max_retries):
@@ -64,4 +64,4 @@ def oxe_delete_user(ip_address, extension, header_delete, max_retries):
         # code status 503: retry with same requests + wait 500ms (oxe max 2r/s)
         else:
             time.sleep(.500)
-    return response
+        return response

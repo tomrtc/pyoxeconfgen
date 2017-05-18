@@ -36,7 +36,7 @@ MAX_COLUMN_WIDTHS = {
 
 
 # Version
-def print_version(ctx, param, value):
+def print_version(ctx, value):
     if not value or ctx.resilient_parsing:
         return
     click.echo('confgen version: {}'.format(__version__))
@@ -177,7 +177,7 @@ def cli_set_rainbow_connection(**kwargs):
     if rainbow_id is None:
         print('--rainbowId option is mandatory. Exiting ...')
         exit()
-    phone_book = kwargs.get('phoneBook', YES)
+    # phone_book = kwargs.get('phoneBook', YES)
     activation_code = kwargs.get('activationCode', None)
     if activation_code is None:
         print('--activationCode option is mandatory. Exiting ...')

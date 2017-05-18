@@ -1,6 +1,6 @@
-===========
+============
 Pyoxeconfgen
-===========
+============
 
 Automation tool managing ALE OmniPCX Enterprise configuration. This tools is using OXE REST API (only available for OXE version >= M1.403.10)
 
