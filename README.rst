@@ -28,25 +28,35 @@ Once installed you can run ::
 Examples
 ========
 
+* configure : store configuration in ini file
 
-USERS CREATIONS
+pyoxeconfgen_cli configure --host='10.100.8.10' --login='mtcl' --password='mtcl'
 
+* connect :
 
-pyoxeconfgen_cli createUsers --oxeIp="10.100.8.10" --oxePassword='Pcloud123!' --rangeSize=100 --rangeStart=8000 --setType "SIP_Extension"
+pyoxeconfgen_cli connect --host 'oxe02wbm.rainbow.tech-systems.fr' --login 'mtcl' --password 'mtcl'
 
-pyoxeconfgen_cli createUsers --oxeIp="10.100.8.10" --oxePassword='Pcloud123!' --rangeSize=100 --rangeStart=8000 --setType "UA_VIRTUAL"
+* logout :
 
+pyoxeconfgen_cli logout
 
-SET EXTERNAL FLEX
+* create users
 
-pyoxeconfgen_cli setFlexServer --oxeIp 10.100.8.11 --flexIp 10.100.8.20
+pyoxeconfgen_cli createUsers --rangeSize=100 --rangeStart=8000 --setType "SIP_Extension"
+pyoxeconfgen_cli createUsers --rangeSize=10 --rangeStart=6000 --setType "UA_VIRTUAL"
 
+* delete users
 
-GET JSON MODEL
+pyoxeconfgen_cli deleteUsers --rangeSize=100 --rangeStart=8000
+
+* set external flex server
+
+pyoxeconfgen_cli setFlexServer --flexIp 10.100.8.3
+
+* get OXE JSON data model
 
 pyoxeconfgen_cli getJsonModel --oxeIp 10.100.8.11
 
-it will write json data model to /tmp/OXE_<IP ADDRESS>_YYYYMMDDHHMMSS
 
 Development
 ===========
