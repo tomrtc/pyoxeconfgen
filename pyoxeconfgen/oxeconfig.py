@@ -97,7 +97,7 @@ def oxe_logout(host, token, proxies=None):
         os.remove('/tmp/.pyoxeconfgen')
     except IOError:
         print('JWT cache already purged')
-    # # deauth
+    # close authentication
     requests.packages.urllib3.disable_warnings(requests.packages.urllib3.exceptions.InsecureRequestWarning)
     logout = requests.get('https://' + host + '/api/mgt/1.0/logout',
                           headers=set_headers(token),
@@ -156,7 +156,7 @@ def oxe_create_user(host, token, extension, name, first_name, station_type, max_
         # code status 503: retry with same requests + wait 500ms (oxe max 2r/s)
         elif response.status_code == 503:
             time.sleep(.500)
-    return response.status_code
+    # return response.status_code
 
 
 def oxe_delete_user(host, token, extension, max_retries):
@@ -171,7 +171,7 @@ def oxe_delete_user(host, token, extension, max_retries):
         # code status 503: retry with same requests + wait 500ms (oxe max 2r/s)
         elif response.status_code == 503:
             time.sleep(.500)
-    return response.status_code
+    # return response.status_code
 
 
 def oxe_get_rainbow_agent_version(host, port, login, password):
@@ -181,11 +181,11 @@ def oxe_get_rainbow_agent_version(host, port, login, password):
     try:
         client.connect(host, port, username=login, password=password)
     except paramiko.AuthenticationException:
-        print('*** Failed to connect to {}:{}' % (host, port))
+        print('*** Failed to connect to {}:{}'.format(host, port))
     command = 'rainbowagent -v'
     stdin, stdout, stderr = client.exec_command(command)
-    version = stdout.readlines()[0].split()[2]
-    print(version)
+    version = {'rainbowagent version': stdout.readlines()[0].split()[2]}
+    pprint.pprint(version)
     client.close()
     return version
 
@@ -197,12 +197,30 @@ def oxe_update_ccca_cfg(host, port, login, password, api_server):
     try:
         client.connect(host, port, username=login, password=password)
     except paramiko.AuthenticationException:
-        print('*** Failed to connect to {}:{}' % (host, port))
+        print('*** Failed to connect to {}:{}'.format(host, port))
     command = """
     cat >> /usr3/mao/ccca.cfg << EOF
     RAINBOW_HOST={}
     EOF
     """.format(api_server)
     # print(command)
-    stdin, stdout, stderr = client.exec_command(command)
+    client.exec_command(command)
     client.close()
+
+
+def oxe_get_oxe_version(host, port, login, password):
+    # connect OXE through SSH and execute 'rainbowagent -v'
+    client = paramiko.SSHClient()  # use the paramiko SSHClient
+    client.set_missing_host_key_policy(paramiko.AutoAddPolicy())  # automatically add SSH key
+    try:
+        client.connect(host, port, username=login, password=password)
+    except paramiko.AuthenticationException:
+        print('*** Failed to connect to {}:{}'.format(host, port))
+    command = 'siteid'
+    stdin, stdout, stderr = client.exec_command(command)
+    tmp = stdout.readlines()
+    version = {'OXE version': tmp[2].split()[4].upper() + '.' + tmp[3].split()[3]}
+    pprint.pprint(version)
+    client.close()
+    return version
+

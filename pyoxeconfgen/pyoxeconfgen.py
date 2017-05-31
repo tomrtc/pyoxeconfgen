@@ -90,7 +90,7 @@ def cli_logout():
 
 
 @cli.command('getJsonModel')
-def cli_get_json_model(**kwargs):
+def cli_get_json_model():
     token, host = get_auth_from_cache()
     json_model = json.loads(oxe_get_json_model(host, token))
     horodating = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
@@ -186,6 +186,22 @@ def cli_get_rainbow_agent_version(**kwargs):
     login = kwargs.get('login')
     password = kwargs.get('password')
     oxe_get_rainbow_agent_version(ip, port, login, password)
+
+
+@cli.command('getOxeVersion')
+@click.option('--ip', help='OXE IP address')
+@click.option('--port', help='OXE SSH port', default=22)
+@click.option('--login', help='user login', default='mtcl')
+@click.option('--password', help='user password', default='mtcl')
+def cli_get_rainbow_agent_version(**kwargs):
+    ip = kwargs.get('ip')
+    if ip is None:
+        print('--ip option is mandatory. Exiting ...')
+        exit()
+    port = kwargs.get('port')
+    login = kwargs.get('login')
+    password = kwargs.get('password')
+    oxe_get_oxe_version(ip, port, login, password)
 
 
 @cli.command('updateCccaCfg')
