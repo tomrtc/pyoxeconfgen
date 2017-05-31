@@ -6,6 +6,7 @@ import sys
 import time
 import os
 import json
+import paramiko
 
 
 # create connection config file
@@ -138,6 +139,7 @@ def oxe_set_flex(host, token, flex_ip_address, flex_port):
 
 
 def oxe_create_user(host, token, extension, name, first_name, station_type, max_retries):
+    requests.packages.urllib3.disable_warnings(requests.packages.urllib3.exceptions.InsecureRequestWarning)
     data_post_create_user = {
         "Annu_Name": name,
         "Annu_First_Name": first_name,
@@ -158,6 +160,7 @@ def oxe_create_user(host, token, extension, name, first_name, station_type, max_
 
 
 def oxe_delete_user(host, token, extension, max_retries):
+    requests.packages.urllib3.disable_warnings(requests.packages.urllib3.exceptions.InsecureRequestWarning)
     for i in range(max_retries):
         response = requests.delete('https://' + host + '/api/mgt/1.0/Node/1/Subscriber/' + str(extension),
                                    headers=set_headers(token, 'DELETE'),
@@ -169,3 +172,37 @@ def oxe_delete_user(host, token, extension, max_retries):
         elif response.status_code == 503:
             time.sleep(.500)
     return response.status_code
+
+
+def oxe_get_rainbow_agent_version(host, port, login, password):
+    # connect OXE through SSH and execute 'rainbowagent -v'
+    client = paramiko.SSHClient()  # use the paramiko SSHClient
+    client.set_missing_host_key_policy(paramiko.AutoAddPolicy())  # automatically add SSH key
+    try:
+        client.connect(host, port, username=login, password=password)
+    except paramiko.AuthenticationException:
+        print('*** Failed to connect to {}:{}' % (host, port))
+    command = 'rainbowagent -v'
+    stdin, stdout, stderr = client.exec_command(command)
+    version = stdout.readlines()[0].split()[2]
+    print(version)
+    client.close()
+    return version
+
+
+def oxe_update_ccca_cfg(host, port, login, password, api_server):
+    # update ccca.cfg for all-in-one connection
+    client = paramiko.SSHClient()  # use the paramiko SSHClient
+    client.set_missing_host_key_policy(paramiko.AutoAddPolicy())  # automatically add SSH key
+    try:
+        client.connect(host, port, username=login, password=password)
+    except paramiko.AuthenticationException:
+        print('*** Failed to connect to {}:{}' % (host, port))
+    command = """
+    cat >> /usr3/mao/ccca.cfg << EOF
+    RAINBOW_HOST={}
+    EOF
+    """.format(api_server)
+    # print(command)
+    stdin, stdout, stderr = client.exec_command(command)
+    client.close()

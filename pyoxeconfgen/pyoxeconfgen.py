@@ -170,3 +170,40 @@ def cli_set_rainbow_connection(**kwargs):
 # Create 4645
 # Add mevo to users
 # Add call by name to users
+
+
+@cli.command('getRainbowAgentVersion')
+@click.option('--ip', help='OXE IP address')
+@click.option('--port', help='OXE SSH port', default=22)
+@click.option('--login', help='user login', default='mtcl')
+@click.option('--password', help='user password', default='mtcl')
+def cli_get_rainbow_agent_version(**kwargs):
+    ip = kwargs.get('ip')
+    if ip is None:
+        print('--ip option is mandatory. Exiting ...')
+        exit()
+    port = kwargs.get('port')
+    login = kwargs.get('login')
+    password = kwargs.get('password')
+    oxe_get_rainbow_agent_version(ip, port, login, password)
+
+
+@cli.command('updateCccaCfg')
+@click.option('--ip', help='OXE IP address')
+@click.option('--port', help='OXE SSH port', default=22)
+@click.option('--login', help='user login', default='mtcl')
+@click.option('--password', help='user password', default='mtcl')
+@click.option('--apiserver', help='API server FQDN')
+def cli_get_rainbow_agent_version(**kwargs):
+    ip = kwargs.get('ip')
+    if ip is None:
+        print('--ip option is mandatory. Exiting ...')
+        exit()
+    api_server = kwargs.get('apiserver')
+    if ip is None:
+        print('--api_server option is mandatory. Exiting ...')
+        exit()
+    port = kwargs.get('port')
+    login = kwargs.get('login')
+    password = kwargs.get('password')
+    oxe_update_ccca_cfg(ip, port, login, password, api_server)
