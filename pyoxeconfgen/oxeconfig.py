@@ -174,6 +174,16 @@ def oxe_delete_user(host, token, extension, max_retries):
     # return response.status_code
 
 
+def oxe_get_rainbow_config():
+    config = configparser.ConfigParser()
+    config.read('etc/oxe.ini')
+    rainbow_domain = config.get('default', 'rainbow_domain', raw=False)
+    pbx_id = config.get('default', 'pbx_id', raw=False)
+    rainbow_temp_password = config.get('default', 'rainbow_temp_password', raw=False)
+    rainbow_host = config.get('default', 'rainbow_host', raw=False)
+    return rainbow_domain, pbx_id, rainbow_temp_password, rainbow_host
+
+
 def oxe_get_rainbow_agent_version(host, port, login, password):
     # connect OXE through SSH and execute 'rainbowagent -v'
     client = paramiko.SSHClient()  # use the paramiko SSHClient
@@ -223,4 +233,3 @@ def oxe_get_oxe_version(host, port, login, password):
     pprint.pprint(version)
     client.close()
     return version
-

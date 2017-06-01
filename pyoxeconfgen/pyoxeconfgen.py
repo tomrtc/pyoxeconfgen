@@ -159,6 +159,9 @@ def cli_set_rainbow_connection(**kwargs):
     if activation_code is None:
         print('--activationCode option is mandatory. Exiting ...')
         exit()
+    # get config from file
+    # request
+    # update ccca.cfg
 
 # Create entity
 # Create Shelves/OMS
