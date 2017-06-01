@@ -1,0 +1,22 @@
+CHANGES
+=======
+
+* [DEV] get OXE version
+* [DEV] get rainbowagent version / customize ccca.cfg
+* [DEV] simplify commands with JWT cache + refactor
+* [FIX] fix print\_version signature
+* [FIX] refactor + fixes
+* [FIX] reformat code, refactoring cli functions, clean unused requirements
+* [FIX] create & delete users requests retries & delay fixes
+* [DEV] add retries and sleep in case of requests exceptions for create & delete users to fit requests limitation on OXE web server M1.403.14
+* [FIX] change create users first name
+* [DEV] delete users
+* [FIX] add file extension when saving json model + format code
+* [DEV] add get OXE JSON data model
+* [DEV] addition of external flex settings modification
+* [FIX] requirements.txt + refactor
+* [DEV] get json model from OXE + refactor
+* [dev] 1st usages
+* [dev] create\_users multi type
+* [dev] oxe device creation
+* first commit - pkg creation
