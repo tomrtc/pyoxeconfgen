@@ -72,14 +72,19 @@ def cli_configure(**kwargs):
 @click.option('--login', help='OXE login', default='mtcl')
 @click.option('--password', help='OXE password', default='mtcl')
 @click.option('--proxies', help='API server FQDN', default=None)
+@click.option('--ini', help='Config File', is_flag=True)
 def cli_connect(**kwargs):
-    host = kwargs.get('host', None)
-    if host is None:
-        print('--host option is mandatory')
-        exit()
-    login = kwargs.get('login', 'mtcl')
-    password = kwargs.get('password', 'mtcl')
-    proxies = kwargs.get('proxies', None)
+    ini = kwargs.get('ini', False)
+    if ini is False:
+        host = kwargs.get('host', None)
+        if host is None:
+            print('--host option is mandatory')
+            exit()
+        login = kwargs.get('login', 'mtcl')
+        password = kwargs.get('password', 'mtcl')
+        proxies = kwargs.get('proxies', None)
+    else:
+        host, login, password, proxies = get_config()
     oxe_authenticate(host, login, password, proxies)
 
 
@@ -101,17 +106,25 @@ def cli_get_json_model():
 @cli.command('createUsers')
 @click.option('--rangeSize', help='range of users to create', default=1)
 @click.option('--rangeStart', help='first internal number', default=8000)
-@click.option('--setType', help='set type')
+@click.option('--setType', help='set type', default='SIP_Extension')
+@click.option('--companyId', help='Company Index', default=1)
 def cli_create_users(**kwargs):
     range_size = int(kwargs.get('rangesize', 1))
     range_start = int(kwargs.get('rangestart', 8000))
     set_type = kwargs.get('settype', 'SIP_Extension')
+    company_id = kwargs.get('companyid', 1)
     requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
     token, host = get_auth_from_cache()
     bar = progressbar.ProgressBar()
     # json_model['definitions']['Station_Type']['values'] # to control set type with OXE dictionary
     for extension_number in bar(range(range_start, range_start + range_size)):
-        oxe_create_user(host, token, extension_number, set_type + str(extension_number), extension_number, set_type, 10)
+        if company_id < 10:
+            last_name = 'LC0' + str(company_id) + 'U' + str(extension_number)
+            first_name = 'FC0' + str(company_id) + 'U' + str(extension_number)
+        else:
+            last_name = 'LC0' + str(company_id) + 'U' + str(extension_number)
+            first_name = 'FC0' + str(company_id) + 'U' + str(extension_number)
+        oxe_create_user(host, token, extension_number, last_name, first_name, set_type, 10)
 
 
 @cli.command('deleteUsers')

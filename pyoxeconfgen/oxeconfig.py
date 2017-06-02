@@ -138,10 +138,10 @@ def oxe_set_flex(host, token, flex_ip_address, flex_port):
     return response
 
 
-def oxe_create_user(host, token, extension, name, first_name, station_type, max_retries):
+def oxe_create_user(host, token, extension, last_name, first_name, station_type, max_retries):
     requests.packages.urllib3.disable_warnings(requests.packages.urllib3.exceptions.InsecureRequestWarning)
     data_post_create_user = {
-        "Annu_Name": name,
+        "Annu_Name": last_name,
         "Annu_First_Name": first_name,
         "Station_Type": station_type
     }
