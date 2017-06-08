@@ -80,7 +80,7 @@ def cli_connect(**kwargs):
         password = kwargs.get('password', 'mtcl')
         proxies = kwargs.get('proxies', None)
     else:
-        host, password, proxies = oxe_get_config()
+        host, login, password, proxies = oxe_get_config()
     oxe_authenticate(host, 'mtcl', password, proxies)
 
 
