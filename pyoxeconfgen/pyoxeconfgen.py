@@ -53,24 +53,21 @@ def cli():
 
 @cli.command('configure')
 @click.option('--host', help='OXE IP address / FQDN')
-@click.option('--login', help='OXE login', default='mtcl')
-@click.option('--password', help='OXE password', default='mtcl')
+@click.option('--password', help='mtcl password', default='mtcl')
 @click.option('--proxies', help='API server FQDN', default=None)
 def cli_configure(**kwargs):
     oxe_ip = kwargs.get('host', None)
     if oxe_ip is None:
         print('--host option is mandatory')
         exit()
-    login = kwargs.get('login', 'mtcl')
     password = kwargs.get('password', 'mtcl')
     proxies = kwargs.get('proxies', None)
-    oxe_configure(oxe_ip, login, password, proxies)
+    oxe_configure(oxe_ip, 'mtcl', password, proxies)
 
 
 @cli.command('connect')
 @click.option('--host', help='OXE IP address / FQDN')
-@click.option('--login', help='OXE login', default='mtcl')
-@click.option('--password', help='OXE password', default='mtcl')
+@click.option('--password', help='mtcl password', default='mtcl')
 @click.option('--proxies', help='API server FQDN', default=None)
 @click.option('--ini', help='Config File', is_flag=True)
 def cli_connect(**kwargs):
@@ -80,12 +77,11 @@ def cli_connect(**kwargs):
         if host is None:
             print('--host option is mandatory')
             exit()
-        login = kwargs.get('login', 'mtcl')
         password = kwargs.get('password', 'mtcl')
         proxies = kwargs.get('proxies', None)
     else:
-        host, login, password, proxies = oxe_get_config()
-    oxe_authenticate(host, login, password, proxies)
+        host, password, proxies = oxe_get_config()
+    oxe_authenticate(host, 'mtcl', password, proxies)
 
 
 @cli.command('logout')
@@ -201,24 +197,22 @@ def cli_set_rainbow_connection(**kwargs):
 @cli.command('getRainbowAgentVersion')
 @click.option('--ip', help='OXE IP address')
 @click.option('--port', help='OXE SSH port', default=22)
-@click.option('--login', help='user login', default='mtcl')
-@click.option('--password', help='user password', default='mtcl')
+@click.option('--password', help='mtcl password', default='mtcl')
 def cli_get_rainbow_agent_version(**kwargs):
     ip = kwargs.get('ip')
     if ip is None:
         print('--ip option is mandatory. Exiting ...')
         exit()
     port = kwargs.get('port')
-    login = kwargs.get('login')
     password = kwargs.get('password')
-    oxe_get_rainbow_agent_version(ip, port, login, password)
+    oxe_get_rainbow_agent_version(ip, port, 'mtcl', password)
 
 
 @cli.command('getOxeVersion')
 @click.option('--ip', help='OXE IP address')
 @click.option('--port', help='OXE SSH port', default=22)
-@click.option('--login', help='user login', default='mtcl')
-@click.option('--password', help='user password', default='mtcl')
+@click.option('--login', help='mtcl login', default='mtcl')
+@click.option('--password', help='mtcl password', default='mtcl')
 def cli_get_rainbow_agent_version(**kwargs):
     ip = kwargs.get('ip')
     if ip is None:
@@ -233,7 +227,6 @@ def cli_get_rainbow_agent_version(**kwargs):
 @cli.command('oxeReboot')
 @click.option('--ip', help='OXE IP address')
 @click.option('--port', help='OXE SSH port', default=22)
-@click.option('--login', help='mtcl login', default='mtcl')
 @click.option('--password', help='mtcl password', default='mtcl')
 @click.option('--swinstPassword', help='swinst password', default='SoftInst')
 def cli_get_rainbow_agent_version(**kwargs):
@@ -242,16 +235,14 @@ def cli_get_rainbow_agent_version(**kwargs):
         print('--ip option is mandatory. Exiting ...')
         exit()
     port = kwargs.get('port')
-    login = kwargs.get('login')
     password = kwargs.get('password')
     swinst_password = kwargs.get('swinstpassword')
-    oxe_reboot(ip, port, login, password, swinst_password)
+    oxe_reboot(ip, port, 'mtcl', password, swinst_password)
 
 
 @cli.command('updateCccaCfg')
 @click.option('--ip', help='OXE IP address')
 @click.option('--port', help='OXE SSH port', default=22)
-@click.option('--login', help='mtcl login', default='mtcl')
 @click.option('--password', help='mtcl password', default='mtcl')
 @click.option('--apiserver', help='API server FQDN')
 def cli_get_rainbow_agent_version(**kwargs):
@@ -264,6 +255,5 @@ def cli_get_rainbow_agent_version(**kwargs):
         print('--api_server option is mandatory. Exiting ...')
         exit()
     port = kwargs.get('port')
-    login = kwargs.get('login')
     password = kwargs.get('password')
-    oxe_update_ccca_cfg_dev_all_in_one(ip, port, login, password, api_server)
+    oxe_update_ccca_cfg_dev_all_in_one(ip, port, 'mtcl', password, api_server)
