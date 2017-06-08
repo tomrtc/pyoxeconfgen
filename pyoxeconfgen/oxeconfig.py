@@ -1,3 +1,5 @@
+"""Summary
+"""
 import configparser
 import pprint
 import requests
@@ -10,7 +12,15 @@ import paramiko
 
 
 # create connection config file
-def configure(host, login, password, proxies):
+def oxe_configure(host, login, password, proxies):
+    """Create config file with OXE connection parameters
+    
+    Args:
+        host (str): OXE IP or FQDN
+        login (str): mtcl user
+        password (str): Description
+        proxies (json): Description
+    """
     directory = 'etc/'
     filename = 'pyoxeconfgen.ini'
     try:
@@ -30,7 +40,12 @@ def configure(host, login, password, proxies):
 
 
 # get connection info from config file
-def get_config():
+def oxe_get_config():
+    """Summary
+    
+    Returns:
+        TYPE: Description
+    """
     config = configparser.ConfigParser()
     config.read('etc/pyoxeconfgen.ini')
     oxe_ip = config.get('default', 'host', raw=False)
@@ -44,7 +59,12 @@ def get_config():
 
 
 # store authentication token
-def get_auth_from_cache():
+def oxe_get_auth_from_cache():
+    """Summary
+    
+    Returns:
+        TYPE: Description
+    """
     try:
         with open('/tmp/.pyoxeconfgen') as fh:
             tmp = json.loads(fh.read())
@@ -57,7 +77,16 @@ def get_auth_from_cache():
 
 
 # build header
-def set_headers(token, method=None):
+def oxe_set_headers(token, method=None):
+    """Summary
+    
+    Args:
+        token (TYPE): Description
+        method (None, optional): Description
+    
+    Returns:
+        TYPE: Description
+    """
     # basic method GET
     headers = {
         'Authorization': 'Bearer ' + token,
@@ -73,25 +102,46 @@ def set_headers(token, method=None):
 
 # OXE WBM authentication + JWT cache creation
 def oxe_authenticate(host, login, password, proxies=None):
+    """Summary
+    
+    Args:
+        host (TYPE): Description
+        login (TYPE): Description
+        password (TYPE): Description
+        proxies (None, optional): Description
+    
+    Returns:
+        TYPE: Description
+    """
     requests.packages.urllib3.disable_warnings(requests.packages.urllib3.exceptions.InsecureRequestWarning)
-    get_auth_infos = requests.get('https://' + host + '/api/mgt/1.0/login',
+    authentication = requests.get('https://' + host + '/api/mgt/1.0/login',
                                   timeout=10,
                                   auth=(login, password),
                                   verify=False,
                                   proxies=proxies)
-    if get_auth_infos.status_code == 401:
-        print("Error {} - {}".format(get_auth_infos.json()['errorCode'],
-                                     get_auth_infos.json()['errorMsg']))
-        sys.exit(1)
-    token = get_auth_infos.json()['token']
+    if authentication.status_code == 401:
+        print('Error {} - {}'.format(authentication.json()['errorCode'],
+                                     authentication.json()['errorMsg']))
+        sys.exit(-1)
+    elif authentication.status_code == 000:
+        print('Error {} - telephony is not running on OXE / WBM not available'.format(authentication.status_code))
+        sys.exit(-1)
+    token = authentication.json()['token']
     data = {'oxe_ip': host, 'token': token}
     with open('/tmp/.pyoxeconfgen', 'w') as fh:
         fh.write(json.dumps(data))
-    return get_auth_infos.json()['token']  # remove this line when provisioning updated with get_auth_from_cache
+    return authentication.json()['token']  # remove this line when provisioning updated with get_auth_from_cache
 
 
 # OXE WBM logout + clear JWT cache
 def oxe_logout(host, token, proxies=None):
+    """Summary
+    
+    Args:
+        host (TYPE): Description
+        token (TYPE): Description
+        proxies (None, optional): Description
+    """
     # clear cache
     try:
         os.remove('/tmp/.pyoxeconfgen')
@@ -100,7 +150,7 @@ def oxe_logout(host, token, proxies=None):
     # close authentication
     requests.packages.urllib3.disable_warnings(requests.packages.urllib3.exceptions.InsecureRequestWarning)
     logout = requests.get('https://' + host + '/api/mgt/1.0/logout',
-                          headers=set_headers(token),
+                          headers=oxe_set_headers(token),
                           verify=False,
                           proxies=proxies)
     pprint.pprint(logout.status_code)
@@ -110,9 +160,18 @@ def oxe_logout(host, token, proxies=None):
 
 
 def oxe_get_json_model(host, token):
+    """Summary
+    
+    Args:
+        host (TYPE): Description
+        token (TYPE): Description
+    
+    Returns:
+        TYPE: Description
+    """
     requests.packages.urllib3.disable_warnings(requests.packages.urllib3.exceptions.InsecureRequestWarning)
     response = requests.get('https://' + host + '/api/mgt/1.0/model',
-                            headers=set_headers(token),
+                            headers=oxe_set_headers(token),
                             verify=False,
                             stream=True)
     result = ''
@@ -123,6 +182,17 @@ def oxe_get_json_model(host, token):
 
 
 def oxe_set_flex(host, token, flex_ip_address, flex_port):
+    """Summary
+    
+    Args:
+        host (TYPE): Description
+        token (TYPE): Description
+        flex_ip_address (TYPE): Description
+        flex_port (TYPE): Description
+    
+    Returns:
+        TYPE: Description
+    """
     requests.packages.urllib3.disable_warnings(requests.packages.urllib3.exceptions.InsecureRequestWarning)
     payload = {
         "Flex_Licensing_Enable": "Yes",
@@ -130,25 +200,39 @@ def oxe_set_flex(host, token, flex_ip_address, flex_port):
         "Flex_Server_Port": flex_port,
         "Flex_ProductId_Discovery": "Yes"
     }
-    response = requests.put('https://' + host + '/api/mgt/1.0/Node/1/System_Parameters/1/Flex_Server/1',
-                            headers=set_headers(token, 'PUT'),
-                            json=payload,
-                            verify=False)
+    try:
+        response = requests.put('https://' + host + '/api/mgt/1.0/Node/1/System_Parameters/1/Flex_Server/1',
+                                headers=oxe_set_headers(token, 'PUT'),
+                                json=payload,
+                                verify=False)
+    except requests.exceptions.RequestException as e:
+        pprint.pprint(e)
     # todo: manage errors
-    return response
+    return response.status_code
 
 
 def oxe_create_user(host, token, extension, last_name, first_name, station_type, max_retries):
+    """Summary
+    
+    Args:
+        host (TYPE): Description
+        token (TYPE): Description
+        extension (TYPE): Description
+        last_name (TYPE): Description
+        first_name (TYPE): Description
+        station_type (TYPE): Description
+        max_retries (TYPE): Description
+    """
     requests.packages.urllib3.disable_warnings(requests.packages.urllib3.exceptions.InsecureRequestWarning)
-    data_post_create_user = {
+    payload = {
         "Annu_Name": last_name,
         "Annu_First_Name": first_name,
         "Station_Type": station_type
     }
     for i in range(max_retries):
         response = requests.post('https://' + host + '/api/mgt/1.0/Node/1/Subscriber/' + str(extension),
-                                 headers=set_headers(token, 'POST'),
-                                 json=data_post_create_user,
+                                 headers=oxe_set_headers(token, 'POST'),
+                                 json=payload,
                                  verify=False)
         # code status 201: CREATED
         if response.status_code in (201, 401):
@@ -160,10 +244,18 @@ def oxe_create_user(host, token, extension, last_name, first_name, station_type,
 
 
 def oxe_delete_user(host, token, extension, max_retries):
+    """Summary
+    
+    Args:
+        host (TYPE): Description
+        token (TYPE): Description
+        extension (TYPE): Description
+        max_retries (TYPE): Description
+    """
     requests.packages.urllib3.disable_warnings(requests.packages.urllib3.exceptions.InsecureRequestWarning)
     for i in range(max_retries):
         response = requests.delete('https://' + host + '/api/mgt/1.0/Node/1/Subscriber/' + str(extension),
-                                   headers=set_headers(token, 'DELETE'),
+                                   headers=oxe_set_headers(token, 'DELETE'),
                                    verify=False)
         # code status 200: OK
         if response.status_code in (200, 404):
@@ -175,6 +267,11 @@ def oxe_delete_user(host, token, extension, max_retries):
 
 
 def oxe_get_rainbow_config():
+    """Summary
+    
+    Returns:
+        TYPE: Description
+    """
     config = configparser.ConfigParser()
     config.read('etc/oxe.ini')
     rainbow_domain = config.get('default', 'rainbow_domain', raw=False)
@@ -185,6 +282,17 @@ def oxe_get_rainbow_config():
 
 
 def oxe_get_rainbow_agent_version(host, port, login, password):
+    """Summary
+    
+    Args:
+        host (TYPE): Description
+        port (TYPE): Description
+        login (TYPE): Description
+        password (TYPE): Description
+    
+    Returns:
+        TYPE: Description
+    """
     # connect OXE through SSH and execute 'rainbowagent -v'
     client = paramiko.SSHClient()  # use the paramiko SSHClient
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())  # automatically add SSH key
@@ -200,7 +308,51 @@ def oxe_get_rainbow_agent_version(host, port, login, password):
     return version
 
 
-def oxe_update_ccca_cfg(host, port, login, password, api_server):
+def oxe_set_rainbow(host, token, rainbow_domain, pbx_id, temp_password, phone_book):
+    """Summary
+    
+    Args:
+        host (TYPE): Description
+        token (TYPE): Description
+        rainbow_domain (TYPE): Description
+        pbx_id (TYPE): Description
+        temp_password (TYPE): Description
+        phone_book (TYPE): Description
+    
+    Returns:
+        TYPE: Description
+    """
+    requests.packages.urllib3.disable_warnings(requests.packages.urllib3.exceptions.InsecureRequestWarning)
+    payload = {
+        "Rainbow_Agent_Enable": "Yes",
+        "Rainbow_Domain": rainbow_domain,
+        "Rainbow_Pbx_Id": pbx_id,
+        "Rainbow_Temp_Password": temp_password,
+        "Rainbow_Use_PhoneBook": phone_book.capitalize()
+    }
+    # pprint.pprint(payload)
+    try:
+        response = requests.put('https://' + host + '/api/mgt/1.0/Node/1/RAINBOW/1',
+                                headers=oxe_set_headers(token, 'PUT'),
+                                json=payload,
+                                verify=False
+                                )
+    except requests.exceptions.RequestException as e:
+        pprint.pprint(e)
+    pprint.pprint(response.status_code)
+    return response.status_code
+
+
+def oxe_update_ccca_cfg_dev_all_in_one(host, port, login, password, api_server):
+    """Summary
+    
+    Args:
+        host (TYPE): Description
+        port (TYPE): Description
+        login (TYPE): Descoxe_get_oxe_versionription
+        password (TYPE): Description
+        api_server (TYPE): Description
+    """
     # update ccca.cfg for all-in-one connection
     client = paramiko.SSHClient()  # use the paramiko SSHClient
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())  # automatically add SSH key
@@ -219,6 +371,17 @@ def oxe_update_ccca_cfg(host, port, login, password, api_server):
 
 
 def oxe_get_oxe_version(host, port, login, password):
+    """Summary
+    
+    Args:
+        host (TYPE): Description
+        port (TYPE): Description
+        login (TYPE): Description
+        password (TYPE): Description
+    
+    Returns:
+        TYPE: Description
+    """
     # connect OXE through SSH and execute 'rainbowagent -v'
     client = paramiko.SSHClient()  # use the paramiko SSHClient
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())  # automatically add SSH key
@@ -233,3 +396,30 @@ def oxe_get_oxe_version(host, port, login, password):
     pprint.pprint(version)
     client.close()
     return version
+
+
+def oxe_reboot(host, port, login, password, swinst_password):
+    """Summary
+
+    Args:
+        host (TYPE): Description
+        port (TYPE): Description
+        login (TYPE): Description
+        password (TYPE): Description
+        swinst_password (TYPE): Description
+
+    Returns:
+        TYPE: Description
+    """
+    # connect OXE through SSH and execute 'rainbowagent -v'
+    client = paramiko.SSHClient()  # use the paramiko SSHClient
+    client.set_missing_host_key_policy(paramiko.AutoAddPolicy())  # automatically add SSH key
+    try:
+        client.connect(host, port, username=login, password=password)
+    except paramiko.AuthenticationException:
+        print('*** Failed to connect to {}:{}'.format(host, port))
+    stdin, stdout, stderr = client.exec_command('reboot')
+    pprint.pprint(stdout.readlines())
+    pprint.pprint(stderr.readlines())
+    stdin.write(swinst_password + '\n')
+    client.close()
