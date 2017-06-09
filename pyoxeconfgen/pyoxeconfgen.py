@@ -4,14 +4,24 @@
 # Here go you application specific code.
 
 import click
-from pyoxeconfgen.__init__ import __version__
-from clickclick import AliasedGroup
-from pyoxeconfgen.oxeconfig import *
-import requests
-from requests.packages.urllib3.exceptions import InsecureRequestWarning
 import progressbar
-import json
 import datetime
+import json
+import requests
+from clickclick import AliasedGroup
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
+from pyoxeconfgen.__init__ import __version__
+from pyoxeconfgen.oxe_commands import *
+from pyoxeconfgen.oxe_access import oxe_get_auth_from_cache
+from pyoxeconfgen.oxe_access import oxe_logout
+from pyoxeconfgen.oxe_access import oxe_configure
+from pyoxeconfgen.oxe_access import oxe_get_config
+from pyoxeconfgen.oxe_access import oxe_authenticate
+from pyoxeconfgen.oxe_info import *
+from pyoxeconfgen.oxe_users import *
+from pyoxeconfgen.oxe_rainbow import *
+from pyoxeconfgen.oxe_licensing import *
+
 
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 
@@ -174,13 +184,14 @@ def cli_set_rainbow_connection(**kwargs):
     else:
         rainbow_domain, pbx_id, activation_code, rainbow_host = oxe_get_rainbow_config()
         phone_book = 'Yes'
-    # pprint.pprint(host)
-    # pprint.pprint(token)
-    # pprint.pprint(rainbow_domain)
-    # pprint.pprint(pbx_id)
-    # pprint.pprint(activation_code)
-    # pprint.pprint(phone_book)
     oxe_set_rainbow(host, token, rainbow_domain, pbx_id, activation_code, phone_book)
+
+
+@cli.command('enableSIP')
+@click.option('--ip', help='OXE IP address')
+def cli_enable_sip(**kwargs):
+    print('todo')
+
 
 # Create entity
 # Create Shelves/OMS
