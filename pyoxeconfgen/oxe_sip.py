@@ -1,21 +1,17 @@
-""" OXE connection methods """
-import configparser
+""" OXE SIP configuration methods """
 import pprint
 import requests
 import requests.packages
-import sys
-import os
-import json
 from pyoxeconfgen.oxe_access import oxe_set_headers
 
 
 # create default trunk groups
-def oxe_create_sip_default_trunk_groups(host, token, trunk_id):
+def oxe_sip_create_default_trunk_groups(host, token, trunk_id):
     payload = {
         'Homo_Net_For_Direct_RTP': 'Yes',
         'Number_Of_Digits_To_Send': '4',
         'Public_Network_Category_Id': '31',
-        'Remote_Network': '14',
+        'Remote_Network': '15',
         'Signalization_Variation': 'ABC_F_VARIANT',
         'T2_Specificity': 'SIP',
         'Trunk_Group_Name': 'SIP'
@@ -29,7 +25,7 @@ def oxe_create_sip_default_trunk_groups(host, token, trunk_id):
 
 # configure sip gateway
 def oxe_sip_gateway(host, token):
-    payload = {'SIP_Subnetwork': '14', 'SIP_Trunk_Group': '14'}
+    payload = {'SIP_Subnetwork': '15', 'SIP_Trunk_Group': '15'}
     modification = requests.put('https://' + host + '/api/mgt/1.0/Node/1/SIP/1/SIP_Gateway/1',
                                 json=payload,
                                 headers=oxe_set_headers(token, 'PUT'),
