@@ -152,7 +152,6 @@ def cli_delete_users(**kwargs):
 @click.option('--ip', help='External Flex server IP address')
 @click.option('--port', help='External Flex port', default=27000)
 @click.option('--reboot', help='Reboot CS to apply settings', is_flag=True)
-@click.option('--reboot', help='Reboot CS to apply settings', is_flag=True)
 @click.option('--port', help='OXE SSH port / needed if --reboot', default=22)
 @click.option('--password', help='mtcl password / needed if --reboot', default='mtcl')
 @click.option('--swinstPassword', help='swinst password / needed if --reboot', default='SoftInst')
