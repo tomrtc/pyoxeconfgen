@@ -5,7 +5,7 @@ import re
 import pprint
 
 
-def oxe_reboot(host, port, login, password, swinst_password):
+def oxe_reboot(host, port, password, swinst_password):
     """Reboot OXE Call Server
 
     Args:
@@ -22,7 +22,7 @@ def oxe_reboot(host, port, login, password, swinst_password):
     client = paramiko.SSHClient()  # use the paramiko SSHClient
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())  # automatically add SSH key
     try:
-        client.connect(host, port, username=login, password=password)
+        client.connect(host, port, username='mtcl', password=password)
     except paramiko.AuthenticationException:
         print('*** Failed to connect to {}:{}'.format(host, port))
     channel = client.invoke_shell()

@@ -152,7 +152,7 @@ def cli_delete_users(**kwargs):
 @click.option('--ip', help='External Flex server IP address')
 @click.option('--port', help='External Flex port', default=27000)
 @click.option('--reboot', help='Reboot CS to apply settings', is_flag=True)
-@click.option('--port', help='OXE SSH port / needed if --reboot', default=22)
+@click.option('--sshPort', help='OXE SSH port / needed if --reboot', default=22)
 @click.option('--password', help='mtcl password / needed if --reboot', default='mtcl')
 @click.option('--swinstPassword', help='swinst password / needed if --reboot', default='SoftInst')
 def cli_set_flex_server(**kwargs):
@@ -164,8 +164,8 @@ def cli_set_flex_server(**kwargs):
     token, host = oxe_get_auth_from_cache()
     oxe_set_flex(host, token, flex_ip_address, flex_port)
     print('WARNING: OXE must be rebooted')
-    if kwargs.get('reboot'):
-        port = kwargs.get('port')
+    if kwargs.get('reboot') is True:
+        port = kwargs.get('sshport')
         mtcl_password = kwargs.get('password')
         swinst_password = kwargs.get('swinstpassword')
         oxe_reboot(host, port, mtcl_password, swinst_password)
@@ -268,7 +268,7 @@ def cli_oxe_reboot(**kwargs):
     port = kwargs.get('port')
     password = kwargs.get('password')
     swinst_password = kwargs.get('swinstpassword')
-    oxe_reboot(ip, port, 'mtcl', password, swinst_password)
+    oxe_reboot(ip, port, password, swinst_password)
 
 
 # SIP management
