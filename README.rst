@@ -28,6 +28,9 @@ Once installed you can run ::
 Examples
 ========
 
+Access methods
+--------------
+
 * configure : store configuration in ini file
 
 pyoxeconfgen_cli configure --host='10.100.8.10' --login='mtcl' --password='mtcl'
@@ -41,6 +44,10 @@ pyoxeconfgen_cli connect --ini
 
 pyoxeconfgen_cli logout
 
+
+Users methods
+-------------
+
 * create users
 
 pyoxeconfgen_cli createUsers --rangeSize=100 --rangeStart=8000 --setType "SIP_Extension"
@@ -50,17 +57,34 @@ pyoxeconfgen_cli createUsers --rangeSize=10 --rangeStart=6000 --setType "UA_VIRT
 
 pyoxeconfgen_cli deleteUsers --rangeSize=100 --rangeStart=8000
 
+
+Licensing methods
+-----------------
+
 * set external flex server
 
 pyoxeconfgen_cli setFlexServer --ip 10.100.8.3
+pyoxeconfgen_cli setFlexServer --ip 10.100.8.3 --reboot
+
+
+JSON model management
+---------------------
 
 * get OXE JSON data model
 
 pyoxeconfgen_cli getJsonModel --ip 10.100.8.10
 
+
+Collect Information
+-------------------
+
 * get OXE Version
 
 pyoxeconfgen_cli getOxeVersion --ip 10.100.8.10
+
+
+Rainbow connection methods
+--------------------------
 
 * get rainbow agent version running on OXE
 
@@ -74,6 +98,37 @@ pyoxeconfgen_cli setRainbowConnection --ini
 * update ccca.cfg for rainbow test environment ALL-IN-ONE
 
 pyoxeconfgen_cli updateCccaCfg --ip 10.100.8.14 --port 22 --login mtcl --password mtcl --apiserver alexantr-agent.openrainbow.org
+
+
+OMS configuration methods
+-------------------------
+
+* Set main Call Server & cristal number to auto-discovery
+
+pyoxeconfgen_cli setFlexServer --ip 10.100.8.3
+
+
+
+Shelves methods
+---------------
+
+* Create shelf
+
+* Update ethernet parameters
+
+
+SIP management
+--------------
+
+* Default configuration to enable SIP (default trunk groups + SIP GW + SIP Proxy)
+
+
+Netadmin management
+-------------------
+
+
+Swinst management
+-----------------
 
 
 
