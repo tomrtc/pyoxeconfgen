@@ -35,14 +35,17 @@ Access methods
 
 | pyoxeconfgen_cli configure --host='10.100.8.10' --login='mtcl' --password='mtcl'
 
+
 * connect :
 
 | pyoxeconfgen_cli connect --host 'oxe02wbm.rainbow.tech-systems.fr' --login 'mtcl' --password 'mtcl'
 | pyoxeconfgen_cli connect --ini
 
+
 * logout :
 
 | pyoxeconfgen_cli logout
+
 
 
 Users methods
@@ -53,9 +56,11 @@ Users methods
 | pyoxeconfgen_cli createUsers --rangeSize=100 --rangeStart=8000 --setType "SIP_Extension"
 | pyoxeconfgen_cli createUsers --rangeSize=10 --rangeStart=6000 --setType "UA_VIRTUAL"
 
+
 * delete users
 
 | pyoxeconfgen_cli deleteUsers --rangeSize=100 --rangeStart=8000
+
 
 
 Licensing methods
@@ -67,12 +72,14 @@ Licensing methods
 | pyoxeconfgen_cli setFlexServer --ip 10.100.8.3 --reboot
 
 
+
 JSON model management
 ---------------------
 
 * get OXE JSON data model
 
 | pyoxeconfgen_cli getJsonModel --ip 10.100.8.10
+
 
 
 Collect Information
@@ -83,6 +90,7 @@ Collect Information
 | pyoxeconfgen_cli getOxeVersion --ip 10.100.8.10
 
 
+
 Rainbow connection methods
 --------------------------
 
@@ -90,14 +98,17 @@ Rainbow connection methods
 
 | pyoxeconfgen_cli getRainbowAgentVersion --ip 10.100.8.10
 
+
 * set Rainbow connection
 
 | pyoxeconfgen_cli setRainbowConnection --rainbowDomain 'alexantr-all-in-one-dev-1.opentouch.cloud' --pbxId 'PBXd513-58ac-2d51-4737-a3a8-6b1e-6926-9e14' --activationCode 4567 --phoneBook Yes
 | pyoxeconfgen_cli setRainbowConnection --ini
 
+
 * update ccca.cfg for rainbow test environment ALL-IN-ONE
 
 | pyoxeconfgen_cli updateCccaCfg --ip 10.100.8.14 --port 22 --login mtcl --password mtcl --apiserver alexantr-agent.openrainbow.org
+
 
 
 OMS configuration methods
