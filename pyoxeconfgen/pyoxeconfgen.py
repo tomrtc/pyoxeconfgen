@@ -16,6 +16,9 @@ from pyoxeconfgen.oxe_users import *
 from pyoxeconfgen.oxe_rainbow import *
 from pyoxeconfgen.oxe_licensing import *
 from pyoxeconfgen.oxe_sip import *
+from pyoxeconfgen.oxe_shelves import *
+# from pyoxeconfgen.oxe_netadmin import *
+# from pyoxeconfgen.oxe_swinst import *
 from pyoxeconfgen.oms_config import *
 
 
@@ -285,11 +288,25 @@ def cli_enable_sip(trkid):
 # OMS management
 
 @cli.command('createShelf')
-@click.option('--id', help='shelf id', default=10)
-@click.option('--rackSize', help='shelf rack size', default='MediaGateway_Large')
-def cli_shelf_create(id, racksize):
-    print('todo\n')
+@click.option('--shelfId', help='shelf id', default=10)
+# @click.option('--rackSize', help='shelf rack size', default='MediaGateway_Large')
+def cli_shelf_create(shelfid, racksize=None):
     token, host = oxe_get_auth_from_cache()
+    oxe_create_shelf(host, token, shelfid, 'MediaGateway_Large')
+
+
+@cli.command('shelfEthernetParameters')
+@click.option('--shelfId', help='shelf id', default=None)
+@click.option('--mac', help='shelf MAC address', default=None)
+def cli_shelf_ethernet_parameters(shelfid, mac):
+    if shelfid is None:
+        print('--shelfId option is mandatory. Exiting ...')
+        exit(-1)
+    if mac is None:
+        print('--mac option is mandatory. Exiting ...')
+        exit(-1)
+    token, host = oxe_get_auth_from_cache()
+    oxe_shelf_ethernet_parameters(host, token, shelfid, mac)
 
 
 @cli.command('omsConfig')

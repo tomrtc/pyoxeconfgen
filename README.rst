@@ -125,11 +125,12 @@ Shelves methods
 
 * Create shelf
 
-    + *On Going*
+    + pyoxeconfgen_cli createShelf
+    + pyoxeconfgen_cli createShelf --shelfId 20
 
 * Update ethernet parameters
 
-    + *On Going*
+    + pyoxeconfgen_cli shelfEthernetParameters --shelfId 10 --mac 00:50:56:3c:86:9f
 
 
 SIP management
