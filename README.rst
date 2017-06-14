@@ -128,10 +128,14 @@ Shelves methods
 * Update ethernet parameters
 
 
+
 SIP management
 --------------
 
 * Default configuration to enable SIP (default trunk groups + SIP GW + SIP Proxy)
+
+| pyoxeconfgen_cli enableSip --trkId 15
+
 
 
 Netadmin management

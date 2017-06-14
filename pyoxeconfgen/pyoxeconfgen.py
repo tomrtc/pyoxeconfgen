@@ -275,12 +275,11 @@ def cli_oxe_reboot(**kwargs):
 
 @cli.command('enableSip')
 @click.option('--trkId', help='Trunk ID for SIP', default=15)
-def cli_enable_sip(trunk_id):
+def cli_enable_sip(trkid):
     token, host = oxe_get_auth_from_cache()
-    oxe_sip_create_default_trunk_groups(host, token, trunk_id)
-    oxe_sip_gateway(host, token)
+    oxe_sip_create_default_trunk_groups(host, token, trkid)
+    oxe_sip_gateway(host, token, trkid)
     oxe_sip_proxy(host, token)
-
 
 
 # OMS management
